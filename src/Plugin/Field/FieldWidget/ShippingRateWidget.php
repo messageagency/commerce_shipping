@@ -91,7 +91,17 @@ class ShippingRateWidget extends WidgetBase implements ContainerFactoryPluginInt
     $options = [];
     foreach ($shipping_methods as $shipping_method) {
       $shipping_method_plugin = $shipping_method->getPlugin();
-      $shipping_rates = $shipping_method_plugin->calculateRates($shipment);
+      try {
+        $shipping_rates = $shipping_method_plugin->calculateRates($shipment);
+      }
+      catch (\Exception $e) {
+        \Drupal::logger('commerce_shipping')
+          ->error(t('Rate calculation failed for @name: @message', [
+            '@name' => $shipping_method->getName(),
+            '@message' => $e->getMessage(),
+          ]);
+        continue;
+      }
       foreach ($shipping_rates as $shipping_rate) {
         $service = $shipping_rate->getService();
         $amount = $shipping_rate->getAmount();
