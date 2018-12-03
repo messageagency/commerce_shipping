@@ -99,7 +99,7 @@ class ShippingRateWidget extends WidgetBase implements ContainerFactoryPluginInt
           ->error(t('Rate calculation failed for @name: @message', [
             '@name' => $shipping_method->getName(),
             '@message' => $e->getMessage(),
-          ]);
+          ]));
         continue;
       }
       foreach ($shipping_rates as $shipping_rate) {
